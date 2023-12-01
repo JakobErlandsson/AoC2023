@@ -14,7 +14,7 @@ public class Main {
         try {
             logger.log(Level.INFO, new Day1().getSolution(false).toString());
             logger.log(Level.INFO, new Day1().getSolution(true).toString());
-        } catch(IOException e) {
+        } catch (IOException e) {
             logger.log(Level.WARNING, "No such file");
         }
     }

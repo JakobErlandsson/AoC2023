@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Util {
 
@@ -22,7 +21,7 @@ public class Util {
         return Integer.valueOf(readAsString(fileName));
     }
 
-    public static List<Integer> readAsListOfIntegers(String fileName) throws IOException{
+    public static List<Integer> readAsListOfIntegers(String fileName) throws IOException {
         return readAsListOfStrings(fileName)
                 .stream()
                 .map(Integer::valueOf)
