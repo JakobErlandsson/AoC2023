@@ -29,10 +29,10 @@ public class Day1 {
         this.input = Util.readAsListOfStrings("1.txt");
     }
 
-    public Integer getSolution(boolean part2) {
+    public Integer getSolution(String part) {
         int sum = 0;
         for (String line : this.input) {
-            List<Integer> digits = getDigits(line, part2);
+            List<Integer> digits = getDigits(line, part.equals("part2"));
             sum += digits.getFirst() * 10 + digits.getLast();
         }
         return sum;
