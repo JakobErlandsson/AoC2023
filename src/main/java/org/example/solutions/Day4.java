@@ -43,8 +43,7 @@ public class Day4 {
             }
         }
         if (part.equals("part2"))
-            for (int i : multiplier)
-                sum += i;
+            sum = Arrays.stream(multiplier).reduce(0, Integer::sum);
         return sum;
     }
 

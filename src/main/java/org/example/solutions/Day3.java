@@ -4,24 +4,41 @@ import org.example.Util;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.Character.isDigit;
 
 public class Day3 {
 
-    private record Coordinate(int x, int y) { }
+    private record Coordinate(int x, int y) {
+    }
+
+    private static class UniqueInteger {
+        Integer number;
+        Long id;
+
+        UniqueInteger(Integer number, Long id) {
+            this.number = number;
+            this.id = id;
+        }
+
+        public Integer getNumber() {
+            return number;
+        }
+    }
+
+    private final AtomicLong id;
 
     private final List<String> input;
 
     private final Map<Coordinate, Character> symbolMap;
-    private final Map<Coordinate[], Integer> numberIndices;
+    private final Map<Coordinate, UniqueInteger> numberIndices;
 
     public Day3() throws IOException {
         this.input = Util.readAsListOfStrings("3.txt");
         symbolMap = new HashMap<>();
         numberIndices = new HashMap<>();
+        id = new AtomicLong();
         buildMaps();
     }
 
@@ -41,39 +58,36 @@ public class Day3 {
                         len++;
                     }
                     x--;
-                    Coordinate[] coords = new Coordinate[len];
+                    UniqueInteger ui = new UniqueInteger(Integer.parseInt(sb.toString()), id.getAndIncrement());
                     for (int i = 0; i < len; i++) {
-                        coords[i] = new Coordinate(index + i, y);
+                        numberIndices.put(new Coordinate(index + i, y), ui);
                     }
-                    numberIndices.put(coords, Integer.parseInt(sb.toString()));
                 }
             }
         }
     }
 
     public Integer getPartNumberSum() {
-        Integer sum = 0;
-        for (Map.Entry<Coordinate[], Integer> entry : numberIndices.entrySet()) {
-            List<Coordinate> neighbours = getNeighbours(entry.getKey()[0], String.valueOf(entry.getValue()).length());
+        Set<UniqueInteger> validParts = new HashSet<>();
+        for (Map.Entry<Coordinate, UniqueInteger> entry : numberIndices.entrySet()) {
+            List<Coordinate> neighbours = getNeighbours(entry.getKey());
             if (neighbours.stream().anyMatch(symbolMap.keySet()::contains))
-                sum += entry.getValue();
+                validParts.add(entry.getValue());
         }
-
-        return sum;
+        return validParts.stream().map(UniqueInteger::getNumber).reduce(0, Integer::sum);
     }
 
     public Integer getSumOfGearRatios() {
-        Integer sum = 0;
+        int sum = 0;
         for (Map.Entry<Coordinate, Character> symbol : symbolMap.entrySet()) {
             if (symbol.getValue() != '*')
                 continue;
             List<Coordinate> neighbours = getNeighbours(symbol.getKey());
             Set<Integer> numbers = new HashSet<>();
             for (Coordinate n : neighbours) {
-                for (Map.Entry<Coordinate[], Integer> entry : numberIndices.entrySet()) {
-                    if (Arrays.asList(entry.getKey()).contains(n))
-                        numbers.add(entry.getValue());
-                }
+                UniqueInteger ui = numberIndices.get(n);
+                if (ui != null)
+                    numbers.add(ui.number);
             }
             if (numbers.size() == 2) {
                 List<Integer> arr = new ArrayList<>(numbers);
@@ -83,21 +97,12 @@ public class Day3 {
         return sum;
     }
 
-    private List<Coordinate> getNeighbours(Coordinate c, int lengthOfNumber) {
-        List<Coordinate> neighbours = new ArrayList<>(lengthOfNumber * 2 + 6);
-        for (int i = -1; i < lengthOfNumber + 1; i++) {
-            neighbours.add(new Coordinate(c.x + i, c.y - 1));
-            neighbours.add(new Coordinate(c.x + i, c.y + 1));
-        }
-        neighbours.add(new Coordinate(c.x - 1, c.y));
-        neighbours.add(new Coordinate(c.x + lengthOfNumber, c.y));
-        return neighbours;
-    }
-
     private List<Coordinate> getNeighbours(Coordinate c) {
         List<Coordinate> neighbours = new ArrayList<>(8);
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
+                if (i == c.x && j == c.y)
+                    continue;
                 neighbours.add(new Coordinate(c.x + i, c.y + j));
             }
         }
