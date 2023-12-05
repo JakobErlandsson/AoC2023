@@ -35,11 +35,10 @@ public class Day4 {
                     }
                 }
             }
-            for (int i = 1; i < matches+1; i++)
-                multiplier[k+i] += multiplier[k];
-            if (part.equals("part1")) {
-                if (matches > 0)
-                    sum += (int) Math.pow(2, matches - 1);
+            for (int i = 1; i < matches + 1; i++)
+                multiplier[k + i] += multiplier[k];
+            if (part.equals("part1") && matches > 0) {
+                sum += (int) Math.pow(2, matches - 1);
             }
         }
         if (part.equals("part2"))
