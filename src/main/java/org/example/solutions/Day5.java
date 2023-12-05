@@ -113,7 +113,7 @@ public class Day5 {
                 Long destEnd = numbers.get(0) + numbers.get(2) - 1;
                 Long sourceEnd = numbers.get(1) + numbers.get(2) - 1;
                 Integer id = counter.getAndIncrement();
-                currentMap.destRanges.put(id, new Range(numbers.get(10), destEnd));
+                currentMap.destRanges.put(id, new Range(numbers.get(0), destEnd));
                 currentMap.sourceRanges.put(id, new Range(numbers.get(1), sourceEnd));
 
             }
@@ -133,6 +133,7 @@ public class Day5 {
                 Long seed = seedToSoil.getFromDest(soil);
                 if (contains(seed))
                     return l;
+                l++;
             }
         }
         else {

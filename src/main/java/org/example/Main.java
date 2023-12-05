@@ -20,6 +20,7 @@ public class Main {
 //            System.out.println("Day three part two:\t\t" + new Day3().getSumOfGearRatios().toString());
 //            System.out.println("Day four part one:\t\t" + new Day4().getSolution("part1").toString());
 //            System.out.println("Day four part two:\t\t" + new Day4().getSolution("part2").toString());
+            System.out.println(new Day5().getSolution("part1").toString());
             System.out.println(new Day5().getSolution("part2").toString());
         } catch (IOException e) {
             logger.log(Level.WARNING, "No such file");
