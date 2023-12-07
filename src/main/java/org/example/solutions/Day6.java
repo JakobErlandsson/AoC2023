@@ -9,14 +9,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Day6 {
-
-    private final List<String> input;
     List<Integer> times;
     List<Integer> records;
     Pattern digitsPattern = Pattern.compile("\\d+");
 
     public Day6() throws IOException {
-        input = Util.readAsListOfStrings("6.txt");
+        List<String> input = Util.readAsListOfStrings("6.txt");
         times = new ArrayList<>();
         records = new ArrayList<>();
         Matcher matcherTime = digitsPattern.matcher(input.getFirst());
@@ -37,7 +35,7 @@ public class Day6 {
                 int timeRemaining = time - i;
                 if (speed * timeRemaining > records.get(j))
                     sum += 1;
-                
+
             }
             prod *= sum;
         }

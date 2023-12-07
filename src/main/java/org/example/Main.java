@@ -22,8 +22,10 @@ public class Main {
 //            System.out.println("Day four part two:\t\t" + new Day4().getSolution("part2").toString());
 //            System.out.println(new Day5().getSolution("part1").toString());
 //            System.out.println(new Day5().getSolution("part2").toString());
-            System.out.println(new Day6().calculateResults().toString());
-            System.out.println(new Day6().calculateResultsPartTwo().toString());
+//            System.out.println(new Day6().calculateResults().toString());
+//            System.out.println(new Day6().calculateResultsPartTwo().toString());
+            //System.out.println(new Day7("part1").getSolution().toString());
+            System.out.println(new Day7("part2").getSolution().toString());
         } catch (IOException e) {
             logger.log(Level.WARNING, "No such file");
         }
