@@ -28,10 +28,10 @@ public class Main {
 //            System.out.println(new Day9().getSolution("part1").toString());
 //            System.out.println(new Day9().getSolution("part2").toString());
 //            System.out.println((new Day10().followLine().size()+1)/2);
-//        System.out.println(new Day10().findEnclosed().toString());
+        System.out.println(new Day10().findEnclosed().toString());
 //        System.out.println(new Day11("part2").getSolution().toString());
 //        System.out.println(new Day12().getSolution("part2").toString());
-        System.out.println(new Day13().getSolution("part1"));
-        System.out.println(new Day13().getSolution("part2"));
+//        System.out.println(new Day13().getSolution("part1"));
+//        System.out.println(new Day13().getSolution("part2"));
     }
 }

@@ -3,8 +3,6 @@ package org.example.solutions;
 import org.example.helper.Coordinate;
 import org.example.helper.Util;
 
-import javax.security.auth.callback.CallbackHandler;
-import java.io.IOException;
 import java.util.*;
 
 public class Day10 {
@@ -16,14 +14,15 @@ public class Day10 {
         DOWN
     }
 
-    private record Step(Coordinate destination, Direction direction){}
+    private record Step(Coordinate destination, Direction direction) {
+    }
 
     Map<Coordinate, Character> map;
     Coordinate start;
     Integer xMax;
     Integer yMax;
 
-    public Day10(){
+    public Day10() {
         map = new HashMap<>();
         List<String> input = Util.readAsListOfStrings("10.txt");
         yMax = input.size();
@@ -41,10 +40,10 @@ public class Day10 {
 
     private Character getStartSymbol(Coordinate coordinate) {
         Coordinate[] neighbours = {
-                new Coordinate(coordinate.x()+1, coordinate.y()),
-                new Coordinate(coordinate.x()-1, coordinate.y()),
-                new Coordinate(coordinate.x(), coordinate.y()-1),
-                new Coordinate(coordinate.x(), coordinate.y()+1)
+                new Coordinate(coordinate.x() + 1, coordinate.y()),
+                new Coordinate(coordinate.x() - 1, coordinate.y()),
+                new Coordinate(coordinate.x(), coordinate.y() - 1),
+                new Coordinate(coordinate.x(), coordinate.y() + 1)
         };
         Character right = map.get(neighbours[0]);
         Character left = map.get(neighbours[1]);
@@ -84,7 +83,6 @@ public class Day10 {
         Coordinate at = step(start, next);
         while (!at.equals(start)) {
             pipe.add(at);
-            Character c = map.get(at);
             next = switch (map.get(at)) {
                 case 'J' -> next == Direction.RIGHT ? Direction.UP : Direction.LEFT;
                 case 'F' -> next == Direction.UP ? Direction.RIGHT : Direction.DOWN;
@@ -99,17 +97,17 @@ public class Day10 {
 
     private List<Coordinate> neighbours(Coordinate c) {
         return List.of(
-                new Coordinate(c.x()+1, c.y()),
-                new Coordinate(c.x()-1, c.y()),
-                new Coordinate(c.x(), c.y()+1),
-                new Coordinate(c.x(), c.y()-1)
+                new Coordinate(c.x() + 1, c.y()),
+                new Coordinate(c.x() - 1, c.y()),
+                new Coordinate(c.x(), c.y() + 1),
+                new Coordinate(c.x(), c.y() - 1)
         );
     }
 
     private Coordinate findTopLeft(Set<Coordinate> pipe) {
         for (int y = 0; y < yMax; y++) {
             for (int x = 0; x < xMax; x++) {
-                Coordinate c =new Coordinate(x, y);
+                Coordinate c = new Coordinate(x, y);
                 if (map.get(c) == 'F' && pipe.contains(c))
                     return c;
             }
@@ -119,15 +117,20 @@ public class Day10 {
 
     private Coordinate step(Coordinate c, Direction d) {
         return switch (d) {
-            case RIGHT -> new Coordinate(c.x()+1, c.y());
-            case LEFT -> new Coordinate(c.x()-1, c.y());
-            case UP -> new Coordinate(c.x(), c.y()-1);
-            case DOWN -> new Coordinate(c.x(), c.y()+1);
+            case RIGHT -> new Coordinate(c.x() + 1, c.y());
+            case LEFT -> new Coordinate(c.x() - 1, c.y());
+            case UP -> new Coordinate(c.x(), c.y() - 1);
+            case DOWN -> new Coordinate(c.x(), c.y() + 1);
         };
     }
 
-    private boolean outside(Coordinate c) {
-        return c.x() < 0 || c.x() >= xMax || c.y() < 0 || c.y() >= yMax;
+    private Coordinate toTheRight(Coordinate c, Direction d) {
+        return switch (d) {
+            case RIGHT -> step(c, Direction.DOWN);
+            case LEFT -> step(c, Direction.UP);
+            case UP -> step(c, Direction.RIGHT);
+            case DOWN -> step(c, Direction.LEFT);
+        };
     }
 
     public Integer findEnclosed() {
@@ -135,10 +138,9 @@ public class Day10 {
         Set<Coordinate> cellsInside = new HashSet<>();
         Coordinate topLeft = findTopLeft(pipe);
         Coordinate at = topLeft;
-        Direction next = Direction.RIGHT;
+        Direction next = Direction.UP;
         do {
-            at = step(at, next);
-            Character character = map.get(at);
+            Direction oldDirection = next;
             next = switch (map.get(at)) {
                 case 'J' -> next == Direction.RIGHT ? Direction.UP : Direction.LEFT;
                 case 'F' -> next == Direction.UP ? Direction.RIGHT : Direction.DOWN;
@@ -146,18 +148,16 @@ public class Day10 {
                 case 'L' -> next == Direction.DOWN ? Direction.RIGHT : Direction.UP;
                 default -> next;
             };
-            Coordinate toTheRight = switch (next) {
-                case RIGHT -> step(at, Direction.DOWN);
-                case LEFT -> step(at, Direction.UP);
-                case UP -> step(at, Direction.RIGHT);
-                case DOWN -> step(at, Direction.LEFT);
-            };
-            if (pipe.contains(toTheRight))
-                continue;
+            Coordinate toTheRight = toTheRight(at, next);
+            Coordinate edgeCase = toTheRight(at, oldDirection);
+
+            Queue<Coordinate> queue = new ArrayDeque<>();
+            if (!pipe.contains(toTheRight))
+                queue.add(toTheRight);
+            if (List.of('J', 'F', 'L', '7').contains(map.get(at)) && !pipe.contains(edgeCase))
+                queue.add(edgeCase);
 
             Set<Coordinate> visited = new HashSet<>();
-            Queue<Coordinate> queue = new ArrayDeque<>();
-            queue.add(toTheRight);
             while (!queue.isEmpty()) {
                 Coordinate c = queue.poll();
                 visited.add(c);
@@ -166,6 +166,7 @@ public class Day10 {
                         queue.add(neighbour);
                 }
             }
+            at = step(at, next);
             cellsInside.addAll(visited);
         } while (!at.equals(topLeft));
         return cellsInside.size();
