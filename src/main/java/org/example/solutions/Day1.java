@@ -1,6 +1,6 @@
 package org.example.solutions;
 
-import org.example.Util;
+import org.example.helper.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
