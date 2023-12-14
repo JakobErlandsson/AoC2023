@@ -18,7 +18,6 @@ public class Day14 {
 
     Integer nColumns;
     Integer nRows;
-    Integer load;
 
 
     public Day14() {
@@ -97,7 +96,6 @@ public class Day14 {
 
     private void tiltNorth() {
         Set<Coordinate> newState = new HashSet<>();
-        int load = 0;
         for (int x = 0; x < nColumns; x++) {
             List<Integer> blocks = squareRocksCols.get(x) == null ? Collections.emptyList() : squareRocksCols.get(x);
             int finalX = x;
@@ -109,10 +107,8 @@ public class Day14 {
                 newLocations.add(newY);
                 newState.add(new Coordinate(x, newY));
             }
-            load += newLocations.stream().map(r -> nRows - r).reduce(0, Integer::sum);
         }
         state = newState;
-        this.load = load;
     }
 
     private void tiltSouth() {
@@ -150,49 +146,45 @@ public class Day14 {
         return sum;
     }
 
+    private boolean isLoop(List<Integer> values) {
+        Integer val = values.getLast();
+        return values.subList(0, values.size()-1).contains(val);
+    }
+
 
     public Integer getSolution(String part) {
+        if (part.equals("part1")) {
+            tiltNorth();
+            return calcLoad();
+        }
         int goal = 1000000000;
-        Map<Integer, List<Integer>> weightCycles = new HashMap<>();
-        Set<Integer> differences = new HashSet<>();
-        for (int i = 1; i < 500; i++) {
+        Map<Integer, List<Integer>> weightValues = new HashMap<>();
+        for (int i = 1; i < goal; i++) { // Will not actually run this long
             cycle();
-            if (part.equals("part1"))
-                return load;
             int weight = calcLoad();
             List<Integer> numbers;
-            if (weightCycles.containsKey(weight))
-                numbers = weightCycles.get(weight);
+            if (weightValues.containsKey(weight))
+                numbers = weightValues.get(weight);
             else
                 numbers = new ArrayList<>();
             numbers.add(i);
-            weightCycles.put(weight, numbers);
-        }
-        for (Map.Entry<Integer, List<Integer>> entry : weightCycles.entrySet()) {
-            if (entry.getValue().size() > 1) {
+            if (numbers.size() >= 3) {
                 List<Integer> diffs = new ArrayList<>();
-                for (int i = 1; i < entry.getValue().size(); i++)
-                    diffs.add(entry.getValue().get(i) - entry.getValue().get(i-1));
-                System.out.println(entry.getKey() + "\t" + Arrays.toString(entry.getValue().toArray()) + "\t" + Arrays.toString(diffs.toArray()));
+                for (int j = 1; j < numbers.size(); j++)
+                    diffs.add(numbers.get(j) - numbers.get(j-1));
+                if (isLoop(diffs)) {
+                    int loopSum = 0;
+                    Integer val = diffs.getLast();
+                    for (int k = diffs.indexOf(val); k < diffs.size()-1; k++) {
+                        loopSum += diffs.get(k);
+                    }
+                    if (loopSum > 1 && goal % loopSum == i % loopSum)
+                        return weight;
+                }
+
             }
+            weightValues.put(weight, numbers);
         }
         throw new RuntimeException("No answer found");
-    }
-
-    private void printState() {
-        for(int y = 0; y < nRows; y++) {
-            StringBuilder sb = new StringBuilder();
-            for (int x = 0; x < nColumns; x++) {
-                if (map.get(new Coordinate(x, y)) == '#')
-                    sb.append("⬜️");
-                else if (state.contains(new Coordinate(x, y)))
-                    sb.append("\uD83D\uDD34");
-                else
-                    sb.append("⬛️");
-            }
-            System.out.println(sb);
-        }
-        System.out.println(calcLoad());
-
     }
 }
