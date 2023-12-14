@@ -2,7 +2,10 @@ package org.example.solutions;
 
 import org.example.helper.Util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,16 +14,15 @@ public class Day12 {
 
     List<String> input;
     Pattern digitsPattern = Pattern.compile("\\d+");
-    Pattern brokenPattern = Pattern.compile("#+");
     Map<Integer, Map<Integer, List<String>>> bitStrings;
 
     public Day12() {
         input = Util.readAsListOfStrings("12.txt");
     }
 
-    public Integer getSolution(String part) {
-        int sum = 0;
-        int bitStringsHits = 0;
+
+    public Long getSolution(String part) {
+        long sum = 0;
         bitStrings = new HashMap<>();
         for (String line : input) {
             Matcher digitsMatcher = digitsPattern.matcher(line);
@@ -37,70 +39,65 @@ public class Day12 {
                     longerPattern.append("?");
                 }
                 digits = longerList;
-                pattern = longerPattern.toString();
+                pattern = longerPattern.deleteCharAt(longerPattern.length() - 1).toString();
             }
-            int nBroken = (int) pattern.chars().filter(c -> c == '#').count();
-            int needed = digits.stream().reduce(0, Integer::sum) - nBroken;
-            int nUnknowns = (int) pattern.chars().filter(c -> c == '?').count();
-            List<String> toTest;
-            if (bitStrings.containsKey(nUnknowns) && bitStrings.get(nUnknowns).containsKey(needed)) {
-                toTest = bitStrings.get(nUnknowns).get(needed);
-                bitStringsHits++;
-            }
-            else {
-                toTest = new ArrayList<>();
-                int start = (int) Math.pow(2, needed) - 1;
-                int end = calcCeiling(nUnknowns, needed);
-                for (int i = start; i <= end; i++) {
-                    int bitCount = Integer.bitCount(i);
-                    if (bitCount != needed)
-                        continue;
-                    String sCounter = String.format("%" + nUnknowns + "s", Integer.toBinaryString(i)).replace(" ", "0");
-                    toTest.add(sCounter);
+            long valid = findValidStrings(pattern, digits);
+            sum += valid;
+        }
+        return sum;
+    }
+
+    private boolean checkBeginning(String sb, Integer length) {
+        for (Character c : sb.substring(0, length).toCharArray()) {
+            if (c == '.')
+                return false;
+        }
+        return sb.length() == length || sb.charAt(length) == '.' || sb.charAt(length) == '?';
+    }
+
+    private record Data(String patter, List<Integer> digits) {
+    }
+
+    Map<Data, Long> cache = new HashMap<>();
+
+
+    private Long findValidStrings(String pattern, List<Integer> digits) {
+        Data data = new Data(pattern, digits);
+        if (cache.containsKey(data))
+            return cache.get(data);
+        int sumOfDigits = digits.stream().reduce(0, Integer::sum);
+        long nDamaged = pattern.chars().filter(c -> c == '#').count();
+        long nAmbiguous = pattern.chars().filter(c -> c == '?').count();
+
+        if (nDamaged > sumOfDigits || nDamaged + nAmbiguous < sumOfDigits) {
+            cache.put(data, 0L);
+            return 0L;
+        }
+        if (sumOfDigits == 0) {
+            cache.put(data, 1L);
+            return 1L;
+        }
+        if (pattern.charAt(0) == '.') {
+            long val = findValidStrings(pattern.substring(1), digits);
+            cache.put(data, val);
+            return val;
+        }
+        if (pattern.charAt(0) == '#') {
+            int l = digits.getFirst();
+            if (checkBeginning(pattern, l)) {
+                if (l == pattern.length()) {
+                    cache.put(data, 1L);
+                    return 1L;
                 }
-                Map<Integer, List<String>> map;
-                if (bitStrings.containsKey(nUnknowns))
-                    map = bitStrings.get(nUnknowns);
-                else
-                    map = new HashMap<>();
-                map.put(needed, toTest);
-                bitStrings.put(nUnknowns, map);
+                long val = findValidStrings(pattern.substring(l + 1), digits.subList(1, digits.size()));
+                cache.put(data, val);
+                return val;
             }
-            for (String s : toTest)
-                if (verify(createString(pattern, s), digits))
-                    sum += 1;
+            cache.put(data, 0L);
+            return 0L;
         }
-        System.out.println(bitStringsHits);
-        return sum;
-    }
-
-//    private void findBitStringsForN()
-
-    private int calcCeiling(int length, int nOnes) {
-        int sum = 0;
-        for (int i = length - nOnes; i < length; i++)
-            sum += (int) Math.pow(2, i);
-        return sum;
-    }
-
-    private String createString(String pattern, String binaryNumber) {
-        int counter = 0;
-        StringBuilder sb = new StringBuilder();
-        for (Character c : pattern.toCharArray()) {
-            if (c == '?') {
-                sb.append(binaryNumber.charAt(counter) == '0' ? '.' : '#');
-                counter++;
-            } else
-                sb.append(c);
-        }
-        return sb.toString();
-    }
-
-    private boolean verify(String pattern, List<Integer> nBroken) {
-        Matcher brokenMatcher = brokenPattern.matcher(pattern);
-        List<String> matches = new ArrayList<>();
-        while (brokenMatcher.find())
-            matches.add(brokenMatcher.group());
-        return matches.stream().map(String::length).toList().equals(nBroken);
+        long val1 = findValidStrings(pattern.replaceFirst("\\?", "."), digits);
+        long val2 = findValidStrings(pattern.replaceFirst("\\?", "#"), digits);
+        return val1 + val2;
     }
 }
