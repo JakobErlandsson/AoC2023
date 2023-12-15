@@ -33,6 +33,8 @@ public class Main {
 //        System.out.println(new Day12().getSolution("part2").toString());
 //        System.out.println(new Day13().getSolution("part1"));
 //        System.out.println(new Day13().getSolution("part2"));
-        System.out.println(new Day14().getSolution("part2").toString());
+//        System.out.println(new Day14().getSolution("part2").toString());
+        System.out.println(new Day15().getSolution().toString());
+        System.out.println(new Day15().calcFocalPower().toString());
     }
 }
