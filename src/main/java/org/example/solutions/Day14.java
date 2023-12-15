@@ -37,26 +37,32 @@ public class Day14 {
             List<Integer> list1 = m1.containsKey(x) ? m1.get(x) : new ArrayList<>();
             List<Integer> list2 = m2.containsKey(y) ? m2.get(y) : new ArrayList<>();
             list1.add(y);
+            Collections.sort(list1);
             list2.add(x);
+            Collections.sort(list2);
             m1.put(x, list1);
             m2.put(y, list2);
         }
     }
 
-    private Integer findNextLocationDecreasing(Integer location, List<Integer> blocks, List<Integer> placedBoulders) {
-        for (int i = location; i >= 0; i--) {
-            if (blocks.contains(i) || placedBoulders.contains(i))
-                return i+1;
+    private Integer findNextLocationDecreasing(Integer location, Integer closestBlock, List<Integer> placedBoulders) {
+        if (closestBlock == 0)
+            return placedBoulders.isEmpty() ? 0 : placedBoulders.getLast() + 1;
+        for (int i = location; i > closestBlock; i--) {
+            if (placedBoulders.contains(i))
+                return i + 1;
         }
-        return 0;
+        return closestBlock + 1;
     }
 
-    private Integer findNextLocationIncreasing(Integer location, List<Integer> blocks, List<Integer> placedBoulders) {
-        for (int i = location; i < nRows; i++) {
-            if (blocks.contains(i) || placedBoulders.contains(i))
-                return i-1;
+    private Integer findNextLocationIncreasing(Integer location, Integer closestBlock, List<Integer> placedBoulders) {
+        if (closestBlock == nRows - 1)
+            return placedBoulders.isEmpty() ? nRows - 1 : placedBoulders.getLast() - 1;
+        for (int i = location; i < closestBlock; i++) {
+            if (placedBoulders.contains(i))
+                return i - 1;
         }
-        return nRows-1;
+        return closestBlock - 1;
     }
 
 
@@ -70,13 +76,21 @@ public class Day14 {
             Collections.reverse(rocks);
             List<Integer> newLocations = new ArrayList<>();
             for (Integer rock : rocks) {
-                Integer newX = findNextLocationIncreasing(rock, blocks, newLocations);
+                int closestBlock = nColumns - 1;
+                for (int i = blocks.size() - 1; i >= 0; i--) {
+                    if (rock < blocks.get(i))
+                        closestBlock = blocks.get(i);
+                    else
+                        break;
+                }
+                Integer newX = findNextLocationIncreasing(rock, closestBlock, newLocations);
                 newLocations.add(newX);
                 newState.add(new Coordinate(newX, y));
             }
         }
         state = newState;
     }
+
     private void tiltWest() {
         Set<Coordinate> newState = new HashSet<>();
         for (int y = 0; y < nRows; y++) {
@@ -86,7 +100,13 @@ public class Day14 {
             Collections.sort(rocks);
             List<Integer> newLocations = new ArrayList<>();
             for (Integer rock : rocks) {
-                Integer newX = findNextLocationDecreasing(rock, blocks, newLocations);
+                int closestBlock = 0;
+                for (Integer block : blocks)
+                    if (rock > block)
+                        closestBlock = block;
+                    else
+                        break;
+                Integer newX = findNextLocationDecreasing(rock, closestBlock, newLocations);
                 newLocations.add(newX);
                 newState.add(new Coordinate(newX, y));
             }
@@ -103,7 +123,13 @@ public class Day14 {
             Collections.sort(rocks);
             List<Integer> newLocations = new ArrayList<>();
             for (Integer rock : rocks) {
-                Integer newY = findNextLocationDecreasing(rock, blocks, newLocations);
+                int closestBlock = 0;
+                for (Integer block : blocks)
+                    if (rock > block)
+                        closestBlock = block;
+                    else
+                        break;
+                Integer newY = findNextLocationDecreasing(rock, closestBlock, newLocations);
                 newLocations.add(newY);
                 newState.add(new Coordinate(x, newY));
             }
@@ -121,7 +147,14 @@ public class Day14 {
             Collections.reverse(rocks);
             List<Integer> newLocations = new ArrayList<>();
             for (Integer rock : rocks) {
-                Integer newY = findNextLocationIncreasing(rock, blocks, newLocations);
+                int closestBlock = nRows - 1;
+                for (int i = blocks.size() - 1; i >= 0; i--) {
+                    if (rock < blocks.get(i))
+                        closestBlock = blocks.get(i);
+                    else
+                        break;
+                }
+                Integer newY = findNextLocationIncreasing(rock, closestBlock, newLocations);
                 newLocations.add(newY);
                 newState.add(new Coordinate(x, newY));
             }
@@ -148,7 +181,7 @@ public class Day14 {
 
     private boolean isLoop(List<Integer> values) {
         Integer val = values.getLast();
-        return values.subList(0, values.size()-1).contains(val);
+        return values.subList(0, values.size() - 1).contains(val);
     }
 
 
@@ -171,11 +204,11 @@ public class Day14 {
             if (numbers.size() >= 3) {
                 List<Integer> diffs = new ArrayList<>();
                 for (int j = 1; j < numbers.size(); j++)
-                    diffs.add(numbers.get(j) - numbers.get(j-1));
+                    diffs.add(numbers.get(j) - numbers.get(j - 1));
                 if (isLoop(diffs)) {
                     int loopSum = 0;
                     Integer val = diffs.getLast();
-                    for (int k = diffs.indexOf(val); k < diffs.size()-1; k++) {
+                    for (int k = diffs.indexOf(val); k < diffs.size() - 1; k++) {
                         loopSum += diffs.get(k);
                     }
                     if (loopSum > 1 && goal % loopSum == i % loopSum)
@@ -186,5 +219,21 @@ public class Day14 {
             weightValues.put(weight, numbers);
         }
         throw new RuntimeException("No answer found");
+    }
+
+    private void printState() {
+        for (int y = 0; y < nRows; y++) {
+            StringBuilder sb = new StringBuilder();
+            for (int x = 0; x < nColumns; x++) {
+                Coordinate c = new Coordinate(x, y);
+                if (state.contains(c))
+                    sb.append('O');
+                else if (map.get(c) == '#')
+                    sb.append('#');
+                else
+                    sb.append(' ');
+            }
+            System.out.println(sb);
+        }
     }
 }
