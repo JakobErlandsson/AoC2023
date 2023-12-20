@@ -37,4 +37,14 @@ public class Util {
         }
         return map;
     }
+
+    public static Map<Coordinate, Integer> toCoordinateIntMap(List<String> input) {
+        Map<Coordinate, Integer> map = new HashMap<>();
+        for (int y = 0; y < input.size(); y++) {
+            for (int x = 0; x < input.get(y).length(); x++) {
+                map.put(new Coordinate(x, y), Character.getNumericValue(input.get(y).charAt(x)));
+            }
+        }
+        return map;
+    }
 }

@@ -33,8 +33,13 @@ public class Main {
 //        System.out.println(new Day12().getSolution("part2").toString());
 //        System.out.println(new Day13().getSolution("part1"));
 //        System.out.println(new Day13().getSolution("part2"));
-        System.out.println(new Day14().getSolution("part2").toString());
+//        System.out.println(new Day14().getSolution("part2").toString());
 //        System.out.println(new Day15().getSolution().toString());
 //        System.out.println(new Day15().calcFocalPower().toString());
+//        System.out.println(new Day16().getSolution("part2").toString());
+//        System.out.println(new Day17().findPathWithLeastHeat().toString());
+//        new Day18();
+//        System.out.println(new Day18().getSizeOfTrench().toString());
+        System.out.println(new Day19().getSolution());
     }
 }

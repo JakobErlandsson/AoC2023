@@ -1,18 +1,12 @@
 package org.example.solutions;
 
 import org.example.helper.Coordinate;
+import org.example.helper.Direction;
 import org.example.helper.Util;
 
 import java.util.*;
 
 public class Day10 {
-
-    private enum Direction {
-        RIGHT,
-        LEFT,
-        UP,
-        DOWN
-    }
 
     private record Step(Coordinate destination, Direction direction) {
     }
