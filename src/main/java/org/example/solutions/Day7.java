@@ -7,7 +7,9 @@ import java.util.*;
 
 import static java.util.stream.Collectors.groupingBy;
 
-public class Day7 {
+public class Day7 implements Solution {
+
+    String part;
 
     private enum Type {
         HIGH_CARD,
@@ -114,12 +116,14 @@ public class Day7 {
         return arr;
     }
 
+    List<String> input;
     List<Hand> hands;
-    String part;
 
-    public Day7(String part) throws IOException {
-        this.part = part;
-        List<String> input = Util.readAsListOfStrings("7.txt");
+    public Day7() {
+        input = Util.readAsListOfStrings("7.txt");
+    }
+
+    private void buildHands() {
         hands = new ArrayList<>();
         for (String line : input) {
             List<Integer> cards = convert(line.split(" ")[0]);
@@ -129,7 +133,20 @@ public class Day7 {
         Collections.sort(hands);
     }
 
-    public Integer getSolution() {
+    @Override
+    public String part1() {
+        part = "part1";
+        return getSolution().toString();
+    }
+
+    @Override
+    public String part2() {
+        part = "part2";
+        return getSolution().toString();
+    }
+
+    private Integer getSolution() {
+        buildHands();
         int sum = 0;
         int rank = 1;
         for (Hand hand : hands) {

@@ -6,7 +6,17 @@ import org.example.helper.Util;
 
 import java.util.*;
 
-public class Day10 {
+public class Day10 implements Solution {
+
+    @Override
+    public String part1() {
+        return followLine().size() / 2 + "";
+    }
+
+    @Override
+    public String part2() {
+        return findEnclosed().toString();
+    }
 
     private record Step(Coordinate destination, Direction direction) {
     }

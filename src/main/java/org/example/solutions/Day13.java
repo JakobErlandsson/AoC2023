@@ -5,7 +5,7 @@ import org.example.helper.Util;
 
 import java.util.*;
 
-public class Day13 {
+public class Day13 implements Solution {
 
     List<String[]> chunks;
 
@@ -102,4 +102,13 @@ public class Day13 {
         return res;
     }
 
+    @Override
+    public String part1() {
+        return getSolution("part1").toString();
+    }
+
+    @Override
+    public String part2() {
+        return getSolution("part2").toString();
+    }
 }

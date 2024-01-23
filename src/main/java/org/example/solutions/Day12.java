@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Day12 {
+public class Day12 implements Solution {
 
 
     List<String> input;
@@ -53,6 +53,16 @@ public class Day12 {
                 return false;
         }
         return sb.length() == length || sb.charAt(length) == '.' || sb.charAt(length) == '?';
+    }
+
+    @Override
+    public String part1() {
+        return getSolution("part1").toString();
+    }
+
+    @Override
+    public String part2() {
+        return getSolution("part2").toString();
     }
 
     private record Data(String patter, List<Integer> digits) {

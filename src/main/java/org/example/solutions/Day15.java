@@ -4,7 +4,7 @@ import org.example.helper.Util;
 
 import java.util.*;
 
-public class Day15 {
+public class Day15 implements Solution {
 
     List<String> input;
     private static final int MULTIPLE = 17;
@@ -30,8 +30,9 @@ public class Day15 {
         return sum;
     }
 
-    public Integer getSolution() {
-        return input.stream().map(this::hash).reduce(0, Integer::sum);
+    @Override
+    public String part1() {
+        return input.stream().map(this::hash).reduce(0, Integer::sum).toString();
     }
 
     private void addTo(Integer box, Lens lens) {
@@ -64,7 +65,7 @@ public class Day15 {
         }
     }
 
-    public Integer calcFocalPower() {
+    public String part2() {
         int sum = 0;
         for (Map.Entry<Integer, List<Lens>> entry : boxes.entrySet()) {
             int focalPower = 0;
@@ -73,7 +74,7 @@ public class Day15 {
             }
             sum += focalPower;
         }
-        return sum;
+        return sum + "";
     }
 
     private void populateBoxes() {

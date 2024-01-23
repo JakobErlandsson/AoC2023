@@ -8,12 +8,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Day5 {
+public class Day5 implements Solution {
 
     private record Range(Long start, Long end) {
     }
 
-    private class SpecialMap {
+    private static class SpecialMap {
         Map<Integer, Range> sourceRanges;
         Map<Integer, Range> destRanges;
 
@@ -86,7 +86,7 @@ public class Day5 {
 
     Pattern digitsPattern = Pattern.compile("\\d+");
 
-    public Day5() throws IOException {
+    public Day5() {
         input = Util.readAsListOfStrings("5.txt");
         seeds = new ArrayList<>();
         seedsV2 = new ArrayList<>();
@@ -120,7 +120,17 @@ public class Day5 {
         }
     }
 
-    public Long getSolution(String part) {
+    @Override
+    public String part1() {
+        return getSolution("part1").toString();
+    }
+
+    @Override
+    public String part2() {
+        return getSolution("part2").toString();
+    }
+
+    private Long getSolution(String part) {
         long l = 0L;
         if (part.equals("part2")) {
             while (true) {

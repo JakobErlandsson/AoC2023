@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Day8 {
+public class Day8 implements Solution {
 
     private record Direction(String left, String right) {}
 
@@ -15,7 +15,7 @@ public class Day8 {
     String instructions;
     Pattern wordPattern = Pattern.compile("\\w+");
 
-    public Day8() throws IOException {
+    public Day8() {
         List<String> input = Util.readAsListOfStrings("8.txt");
         instructions = input.getFirst();
         buildDesertMap(input);
@@ -33,8 +33,8 @@ public class Day8 {
         }
     }
 
-    public Integer findPath() {
-        int steps = 0;
+    public String part1() {
+        Integer steps = 0;
         String at = "AAA";
         while (!at.equals("ZZZ")) {
             char dir = instructions.charAt(steps % instructions.length());
@@ -42,10 +42,10 @@ public class Day8 {
             at = dir == 'L' ? direction.left : direction.right;
             steps++;
         }
-        return steps;
+        return steps.toString();
     }
 
-    public Long findAllPaths() {
+    public String part2() {
         long steps = 0;
         List<String> startingPoints = desertMap
                 .keySet()
@@ -69,7 +69,7 @@ public class Day8 {
                     .toList();
             steps ++;
         }
-        return Arrays.stream(firstOccurrence).distinct().reduce(1L, this::lcm);
+        return Arrays.stream(firstOccurrence).distinct().reduce(1L, this::lcm) + "";
     }
 
     private Long lcm(Long i1, Long i2) {

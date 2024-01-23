@@ -5,7 +5,7 @@ import org.example.helper.Util;
 
 import java.util.*;
 
-public class Day14 {
+public class Day14 implements Solution {
 
     Map<Coordinate, Character> map;
     Map<Integer, List<Integer>> roundRocksCols = new HashMap<>(); // Maps columns to rows
@@ -185,7 +185,7 @@ public class Day14 {
     }
 
 
-    public Integer getSolution(String part) {
+    private Integer getSolution(String part) {
         if (part.equals("part1")) {
             tiltNorth();
             return calcLoad();
@@ -221,19 +221,13 @@ public class Day14 {
         throw new RuntimeException("No answer found");
     }
 
-    private void printState() {
-        for (int y = 0; y < nRows; y++) {
-            StringBuilder sb = new StringBuilder();
-            for (int x = 0; x < nColumns; x++) {
-                Coordinate c = new Coordinate(x, y);
-                if (state.contains(c))
-                    sb.append('O');
-                else if (map.get(c) == '#')
-                    sb.append('#');
-                else
-                    sb.append(' ');
-            }
-            System.out.println(sb);
-        }
+    @Override
+    public String part1() {
+        return getSolution("part1").toString();
+    }
+
+    @Override
+    public String part2() {
+        return getSolution("part2").toString();
     }
 }

@@ -5,12 +5,14 @@ import org.example.helper.Util;
 import java.io.IOException;
 import java.util.*;
 
-public class Day4 {
+public class Day4 implements Solution{
     private final List<String> input;
 
-    public Day4() throws IOException {
+    public Day4() {
         this.input = Util.readAsListOfStrings("4.txt");
     }
+
+
 
     public Integer getSolution(String part) {
         int sum = 0;
@@ -46,4 +48,13 @@ public class Day4 {
         return sum;
     }
 
+    @Override
+    public String part1() {
+        return getSolution("part1").toString();
+    }
+
+    @Override
+    public String part2() {
+        return getSolution("part2").toString();
+    }
 }

@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Day17 {
 
-    private record Step(Coordinate coordinate, Direction direction) {
+    private record Step(Coordinate coordinate, Direction direction, Integer steps) {
     }
 
     private static class Node implements Comparable<Node> {
@@ -101,11 +101,11 @@ public class Day17 {
             Node n = queue.poll();
             if (n.coordinate.equals(endCoordinate))
                 return n;
-            weights.put(new Step(n.coordinate, n.dir), n.weight);
+            weights.put(new Step(n.coordinate, n.dir, n.straightLength), n.weight);
             Map<Coordinate, Direction> neighbours = getNeighbours(n);
             for (Map.Entry<Coordinate, Direction> entry : neighbours.entrySet()) {
                 Node neighbour = coordinateNodeMap.get(entry.getKey());
-                Step step = new Step(neighbour.coordinate, entry.getValue());
+                Step step = new Step(neighbour.coordinate, entry.getValue(), neighbour.straightLength);
                 if (!weights.containsKey(step)) {
                     int heat = n.weight + this.heatMap.get(neighbour.coordinate);
                     if (heat < neighbour.weight) {

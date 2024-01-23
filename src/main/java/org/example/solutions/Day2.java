@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Day2 {
+public class Day2 implements Solution {
 
     private static final String RED = "red";
     private static final String BLUE = "blue";
@@ -24,11 +24,21 @@ public class Day2 {
     private static final Pattern digitsPattern = Pattern.compile("\\d+");
     private static final Pattern colorPattern = Pattern.compile("[a-z]+");
 
-    public Day2() throws IOException {
+    public Day2() {
         this.input = Util.readAsListOfStrings("2.txt");
     }
 
-    public Integer getSolution(String part) {
+    @Override
+    public String part1() {
+        return getSolution("part1").toString();
+    }
+
+    @Override
+    public String part2() {
+        return getSolution("part2").toString();
+    }
+
+    private Integer getSolution(String part) {
         int sum = 0;
         for (String line : input) {
             if (part.equals("part1"))

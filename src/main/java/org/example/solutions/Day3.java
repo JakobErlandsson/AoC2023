@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.Character.isDigit;
 
-public class Day3 {
+public class Day3 implements Solution {
 
     private record Coordinate(int x, int y) {
     }
@@ -34,7 +34,7 @@ public class Day3 {
     private final Map<Coordinate, Character> symbolMap;
     private final Map<Coordinate, UniqueInteger> numberIndices;
 
-    public Day3() throws IOException {
+    public Day3() {
         this.input = Util.readAsListOfStrings("3.txt");
         symbolMap = new HashMap<>();
         numberIndices = new HashMap<>();
@@ -67,18 +67,20 @@ public class Day3 {
         }
     }
 
-    public Integer getPartNumberSum() {
+    @Override
+    public String part1() {
         Set<UniqueInteger> validParts = new HashSet<>();
         for (Map.Entry<Coordinate, UniqueInteger> entry : numberIndices.entrySet()) {
             List<Coordinate> neighbours = getNeighbours(entry.getKey());
             if (neighbours.stream().anyMatch(symbolMap.keySet()::contains))
                 validParts.add(entry.getValue());
         }
-        return validParts.stream().map(UniqueInteger::getNumber).reduce(0, Integer::sum);
+        return validParts.stream().map(UniqueInteger::getNumber).reduce(0, Integer::sum).toString();
     }
 
-    public Integer getSumOfGearRatios() {
-        int sum = 0;
+    @Override
+    public String part2() {
+        Integer sum = 0;
         for (Map.Entry<Coordinate, Character> symbol : symbolMap.entrySet()) {
             if (symbol.getValue() != '*')
                 continue;
@@ -94,7 +96,7 @@ public class Day3 {
                 sum += arr.getFirst() * arr.getLast();
             }
         }
-        return sum;
+        return sum.toString();
     }
 
     private List<Coordinate> getNeighbours(Coordinate c) {

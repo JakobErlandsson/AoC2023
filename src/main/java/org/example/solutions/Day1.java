@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static java.lang.Character.isDigit;
 
-public class Day1 {
+public class Day1 implements Solution{
 
     private final List<String> input;
 
@@ -25,11 +25,21 @@ public class Day1 {
             "nine", 9
     );
 
-    public Day1() throws IOException {
+    public Day1() {
         this.input = Util.readAsListOfStrings("1.txt");
     }
 
-    public Integer getSolution(String part) {
+    @Override
+    public String part1() {
+        return getSolution("part1").toString();
+    }
+
+    @Override
+    public String part2() {
+        return getSolution("part2").toString();
+    }
+
+    private Integer getSolution(String part) {
         int sum = 0;
         for (String line : this.input) {
             List<Integer> digits = getDigits(line, part.equals("part2"));

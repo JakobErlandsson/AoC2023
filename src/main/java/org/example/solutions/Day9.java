@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Day9 {
+public class Day9 implements Solution {
 
-    private List<List<Integer>> input;
+    private final List<List<Integer>> input;
     Pattern numberPattern = Pattern.compile("[0-9-]+");
 
-    public Day9() throws IOException {
+    public Day9() {
         List<String> tmp = Util.readAsListOfStrings("9.txt");
         input = new ArrayList<>();
         for (String line : tmp) {
@@ -27,8 +27,18 @@ public class Day9 {
         }
     }
 
+    @Override
+    public String part1() {
+        return getSolution("part1").toString();
+    }
+
+    @Override
+    public String part2() {
+        return getSolution("part2").toString();
+    }
+
     public Integer getSolution(String part) {
-        Integer sum = 0;
+        int sum = 0;
         for (List<Integer> line : input) {
             Integer lastNumberSum = 0;
             Map<Integer, List<Integer>> levels = new HashMap<>();

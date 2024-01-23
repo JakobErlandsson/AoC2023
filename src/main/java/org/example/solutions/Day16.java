@@ -6,7 +6,7 @@ import org.example.helper.Util;
 
 import java.util.*;
 
-public class Day16 {
+public class Day16 implements Solution {
 
     private record Step(Coordinate at, Direction direction) {
     }
@@ -36,7 +36,17 @@ public class Day16 {
         return visited.size();
     }
 
-    public Integer getSolution(String part) {
+    @Override
+    public String part1() {
+        return getSolution("part1").toString();
+    }
+
+    @Override
+    public String part2() {
+        return getSolution("part2").toString();
+    }
+
+    private Integer getSolution(String part) {
         if (part.equals("part1"))
             return fireLine(new Step(new Coordinate(0, 0), Direction.RIGHT));
         else {

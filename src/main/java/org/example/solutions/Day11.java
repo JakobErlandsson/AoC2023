@@ -6,7 +6,7 @@ import org.example.helper.Util;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Day11 {
+public class Day11 implements Solution {
 
     Map<Integer, Coordinate> galaxies;
     Set<Integer> emptyRows;
@@ -14,11 +14,10 @@ public class Day11 {
     AtomicInteger counter;
     String part;
 
-    public Day11(String part) {
+    public Day11() {
         List<String> input = Util.readAsListOfStrings("11.txt");
         counter = new AtomicInteger();
         emptyColumns = new HashSet<>();
-        this.part = part;
         for (int x = 0; x < input.get(0).length(); x++) {
             emptyColumns.add(x);
         }
@@ -77,4 +76,15 @@ public class Day11 {
         return res;
     }
 
+    @Override
+    public String part1() {
+        part = "part1";
+        return getSolution().toString();
+    }
+
+    @Override
+    public String part2() {
+        part = "part2";
+        return getSolution().toString();
+    }
 }
